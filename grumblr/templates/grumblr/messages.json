@@ -1,0 +1,16 @@
+{
+  "messages":[
+    {% for message in messages %}{
+  "id" : "{{message.id}}",
+  "profile_pic_url" : "{{message.user.profile.profile_pic.url}}",
+  "user" : "{{message.user}}",
+  "date" : "{{message.date}}",
+  "text" : "{{message.text}}"
+}
+{% if not forloop.last %}, {% endif %}{% endfor %}
+  ],
+  "errors":[
+    {% for error in errors %}"{{error}}"{% if not forloop.last %},{% endif %}{% endfor %}
+  ],
+  "timestamp": {{timestamp}}
+}

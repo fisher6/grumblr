@@ -1,0 +1,26 @@
+{% load static from staticfiles %}
+<!DOCTYPE html>
+<html>
+<head>
+	<title>{% block title %} Welcome to Grumblr {% endblock title %}</title> <!-- For extra readability, I can optionally give a name to endblock. -->
+	<meta charset="UTF-8">
+	<meta name="author" content="Gal (Julian) Fisher">
+	<link href="{% static '/grumblr/css/bootstrap.min.css' %}" rel="stylesheet">
+	<link href="{% static '/grumblr/css/grumblr.css' %}" rel="stylesheet" type="text/css">
+<body>
+	<div class="navbar navbar-default">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<span class="navbar-brand">Grumblr</span>
+			</div>
+			<div class="navbar-header navbar-right">
+				<span class="navbar-right-title">The social network for people with IQ of 42 or more</span>
+			</div>
+		</div>
+	</div>
+	{% block form-specific-content %} <!-- login ad register have different forms and content that can't be templated --> 
+	{% endblock %}
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<script src="{% static '/grumblr/js/bootstrap.min.js' %}"></script>
+</body>
+</html>

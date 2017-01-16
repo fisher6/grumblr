@@ -1,0 +1,82 @@
+{% extends 'grumblr/main_template.html' %}
+{% load static from staticfiles %}
+
+{% block title %}{{first_name}} {{last_name}}{% endblock %}
+
+{% block navbar_active2 %}<li class="active showmessages">{% endblock %}
+
+{% block top-left %}
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-lg-2">
+
+				<img src="{{ user_profile.profile_pic.url }}" alt="profile pic" class="profile-pic">
+				<br>
+				<h2>
+					<a href="{% url 'profile' username %}" class="username"><b>{{ username }}</b></a><br>
+				</h2>
+				<h3 class="text-info">
+					{{ first_name }} {{ last_name }} <br>
+				</h3>
+				<h4 class="text-info">
+				{% if user_profile.age %}
+					{{ user_profile.age }} years old <br><br>
+				{% endif %}
+				{% if user_profile.bio %}
+					<u>About {{first_name }}</u>: {{ user_profile.bio }}<br>
+				{% endif %}
+				</h4>
+				{% ifequal username request.user.username %}
+					<br><a class="btn btn-success col-lg-7" href="{% url 'update-profile' %}">Update profile</a><br><br>
+					{% if not user_profile.age or not user_profile.bio or not first_name or not last_name %}
+					<div class="col-lg-8">
+						<ul class="list-group">
+						<li class="list-group-item list-group-item-action list-group-item-info">Update profile to set your:</li>
+						{% if not first_name %}
+								<li class="list-group-item list-group-item-action list-group-item-info"><strong>First Name</strong></li>
+						{% endif %}
+						{% if not last_name %}
+								<li class="list-group-item list-group-item-action list-group-item-info"><strong>Last Name</strong></li>
+						{% endif %}
+						{% if not user_profile.age %}
+								<li class="list-group-item list-group-item-action list-group-item-info"><strong>Age</strong></li>
+						{% endif %}
+						{% if not user_profile.bio %}
+								<li class="list-group-item list-group-item-action list-group-item-info"><strong>Bio</strong></li>
+						{% endif %}
+						</ul>
+					</div>
+					<br><a class="btn btn-primary col-lg-7" href="{% url 'change-password' %}">Change Password</a><br><br>
+					{% endif %}
+				{% endifequal %}
+			</div>
+			<div class="col-lg-2">
+			</div>
+			<div class="col-lg-4" align="center"> <!-- begins the middle column - the post form and messages -->
+			<div class="error mainerror">
+				{% for error in errors %}
+					{{ error }}<br>
+				{% endfor %}
+			</div>
+{% endblock %}
+			{% block form-action-type %}
+				{% url 'add-post-profile' %}
+			{% endblock %}
+			 {% block follow %}
+			 <div class="col-lg-4">
+			 <span class="pull-right">
+			{% ifnotequal username request.user.username %}
+			{% if not following %}
+				<a class="btn btn-success col-lg-12" href="{% url 'follow-unfollow' username %}">follow</a><br>
+				{% else %}
+				<a class="btn btn-danger col-lg-12" href="{% url 'follow-unfollow' username %}">unfollow</a><br>
+				{% endif %}
+				<br>
+				</span>
+			{% else %}
+				{% if user_profile.is_confirmed == False %}
+				<div class="error">You still haven't confirmed your email!</div>
+				{% endif %}
+			{% endifnotequal %}
+			</div>
+		{% endblock %}

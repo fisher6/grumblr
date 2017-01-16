@@ -1,0 +1,42 @@
+{% extends 'grumblr/login_register_template.html' %}
+{% load static from staticfiles %}
+
+{% block title %}Welcome to Grumblr! Thanks for registering!{% endblock title %} <!-- For extra readability, I can optionally give a name to endblock.
+<!-- navbar goes here from the template -->
+{% block form-specific-content %} <!-- all the content in the register page other than the navbar --> 
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-4"></div>
+			<div class="col-lg-4">
+				<div class="error">
+				{% for error in form.non_field_errors %}
+					{{ error }}
+				{% endfor %}
+				</div>
+				<h3>Welcome abroad on <span style="color:green">Grumblr</span>!</h3>
+				<h3>We just need a few details..</h3>
+				<form action="{% url 'register' %}" method="post">
+					<table>
+					{% for field in form.visible_fields %}
+						<tr>
+							<td>{{field.label_tag}}</td>
+							<td>{{field}}</td>
+							<td class="error">{{field.errors}}</td>
+						</tr>
+						{% endfor %}
+					</table>
+					{% for field in form.hidden_fields %}
+						{{field}}
+					{% endfor %}
+					{% csrf_token %}
+					<button class="btn btn-lg btn-primary btn-block btn-submit  btn-success" type="submit">Register</button>
+				</form>
+				
+				<h3 align="right">
+					<a href="{% url 'login' %}">Already registered?</a>
+				</h4>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+<!-- including jquery and bootstrap scripts and closing tags from the template -->

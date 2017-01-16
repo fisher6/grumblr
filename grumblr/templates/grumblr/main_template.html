@@ -1,0 +1,110 @@
+{% load static from staticfiles %}
+<!DOCTYPE html>
+<html>
+<head>
+	<title>{% block title %} Welcome to Grumblr {% endblock %}</title>
+	<meta charset="UTF-8">
+	<meta name="author" content="Gal (Julian) Fisher">
+	<link href="{% static '/grumblr/css/bootstrap.min.css' %}" rel="stylesheet">
+	<link href="{% static '/grumblr/css/grumblr.css' %}" rel="stylesheet" type="text/css">
+<body>
+	<div class="navbar navbar-default">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<span class="navbar-brand">Grumblr</span>
+			</div>
+			<p class="nav navbar-text navbar-center">Logged in as
+				<a href="{% url 'profile' request.user.username %}">{{ request.user.username }} <img src="{{ request.user.profile.profile_pic.url }}"></a>
+			</p>
+			<ul class="nav navbar-nav navbar-right">
+				{% block navbar_active1 %}<li>{% endblock %}<a href="{% url 'home' %}">Home</a></li>
+				{% block navbar_active2 %}<li>{% endblock %}<a href="{% url 'profile' request.user.username %}">Profile</a></li>
+				{% block navbar_active3 %}<li>{% endblock %}<a href="{% url 'following' %}">Following</a></li>
+
+				<li><a href="{% url 'logout' %}">Logout</a></li>
+			</ul>
+		</div>
+	</div>
+	{% block top-left %}
+	{% endblock %}
+			{% ifequal username request.user.username %}
+				{% if form %}
+				<form id="message" action="{% block form-action-type %}{% endblock %}" method="post">
+					<div class="form-group form-inline">
+						<table>
+							{% for field in form.visible_fields %}
+								<tr>
+									<!--<td>{{field.label_tag}}</td>-->
+									<td>{{field}}</td>
+									<td class="error">{{field.errors}}</td>
+								</tr>
+							{% endfor %}
+						</table>
+						{% for field in form.hidden_fields %} <!-- though we don't have hidden fields now -->
+							{{field}}
+						{% endfor %}
+						{% csrf_token %}
+						<button type="submit" class="btn btn-primary btn-success">Post!</button>
+						<input type="hidden" id="timestamp" value="{{timestamp}}" name="timestamp">
+					</div>
+				</form>
+				{% endif %}
+
+			{% endifequal %}
+			<!-- i need timestamp in every page where i refresh the messages (to prevent
+			syncing all the messages at once), so throw this input here,
+			to have it like index.html and profile.html -->
+			<input type="hidden" id="timestamp" value="{{timestamp}}" name="timestamp">
+
+			<br><br>
+			<div id="messages">
+			</div>
+				{% for message in messages %}
+				<form class="comment-form" action="comment" method="post">
+						<div id="{{ message.id }}" class="list-group message-thread">
+							<div class="col-lg-2 post-pic">
+								<img src="{{ message.user.profile.profile_pic.url }}" class="img-responsive">
+							</div>
+							<div class="col-lg-2 post-name-date">
+								<a href="{% url 'profile' message.user %}" class="post-name">{{message.user}}</a>
+								<br>
+								<span class="post-date">{{message.date}}</span>
+							</div>
+							<br>
+							 {{message.text}}
+					<br><br>
+					{% for comment in message.comments.all %}
+							<div id="{{ comment.id }}" class="list-group-item disabled">
+								<div class="col-lg-2 post-pic">
+									<img src="{{ comment.user.profile.profile_pic.url }}" class="img-responsive">
+								</div>
+								<div class="col-lg-2 post-name-date">
+									<a href="{% url 'profile' comment.user %}" class="post-name">{{comment.user}}</a>
+									<br>
+									<span class="post-date">{{comment.date}}</span>
+								</div>
+								<br>
+								{{comment.text}}
+								<br><br>
+							</div>
+
+					{% endfor %}
+				<span>
+					<textarea cols="20" class="{{ message.id }}" maxlength="42" name="text" placeholder="Reply" rows="1" required></textarea>
+				</span>
+				{% csrf_token %}
+				<button type="submit" class="btn btn-sm btn-success comment-btn">Comment</button>
+				<input type="hidden" class="message_id" value="{{message.id}}" name="message_id">
+				</div>
+			</form>
+				{% endfor %}
+			</div>
+			{% block follow %}{% endblock %}
+		</div>
+	</div>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<script src="{% static '/grumblr/js/bootstrap.min.js' %}"></script>
+	<script src="{% static '/grumblr/js/jquery-3.1.1.min.js' %}"></script>
+	<script src="{% static '/grumblr/js/grumblr.js' %}"></script>
+</body>
+</html>

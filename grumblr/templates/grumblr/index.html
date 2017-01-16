@@ -1,0 +1,21 @@
+{% extends 'grumblr/main_template.html' %}
+{% load static from staticfiles %}
+
+{% block title %}Welcome to Grumblr, {{request.user.username}}{% endblock %}
+
+{% block navbar_active1 %}<li class="active showmessages">{% endblock %}
+
+{% block top-left %}
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-lg-4"></div>
+			<div class="col-lg-4" align="center">
+				<div class="error mainerror">
+					{% for error in errors %}
+						{{ error }}<br>
+					{% endfor %}
+				</div>
+{% endblock %}
+		{% block form-action-type %}
+			{% url 'add-post' %}
+		{% endblock %}

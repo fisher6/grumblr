@@ -1,0 +1,26 @@
+{% extends 'grumblr/main_template.html' %}
+{% load static from staticfiles %}
+	
+{% block title %}Update Profile{% endblock %}
+
+{% block navbar_active2 %}<li class="active">{% endblock %}
+
+{% block top-left %}	
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-lg-4">
+			
+			<div class="col-lg-4" align="center"> <!-- begins the middle column - the post form and messages -->			
+			<form method="post" action="{% url 'update-profile' %}" enctype="multipart/form-data"> <!-- multipart for pics -->
+				<table>
+				{{ user_form.as_p }}
+				{{ user_profile_form.as_p }}
+				{% csrf_token %}
+				
+				<button class="btn btn-md btn-primary btn-block btn-submit btn-success type="submit">Update Profile</button>
+			</form>
+			<a class="btn-outline-success col-md-12" href="{% url 'profile' request.user.username %}">Cancel</a><br><br>
+{% endblock %}
+			{% block form-action-type %}
+				{% url 'add-post-profile' %}
+			{% endblock %}

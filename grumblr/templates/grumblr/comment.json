@@ -1,0 +1,7 @@
+{
+    "message_id" : "{{ comment.message.id }}",
+    "profile_pic_url" : "{{comment.user.profile.profile_pic.url}}",
+    "user" : "{{comment.user}}",
+    "date" : "{{comment.date}}",
+    "text" : "{{comment.text}}"
+}
